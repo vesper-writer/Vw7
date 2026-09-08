@@ -14,26 +14,89 @@
 <div class="drawer" id="drawer"><button class="close" id="close">×</button><nav><a href="#/">VESPER</a><a href="#/read">READ</a><a href="#/archive">ARCHIVE</a><a href="#/about">ABOUT</a><button id="searchBtn">SEARCH</button><a href="#/admin">ADMIN</a></nav></div>
 <main id="app"></main>
 <script>
-const U='https://pmudwltxmyljiiiossch.supabase.co',K='sb_publishable_As2-YSQgc3BRsv1MzTdKDg_qUz3nqQ8',S='vesper-admin-session',H={apikey:K,'Content-Type':'application/json'};let writings=[],aboutText='';const app=document.getElementById('app'),drawer=document.getElementById('drawer');
-async function api(p,o={}){const r=await fetch(U+'/rest/v1/'+p,{...o,headers:{...H,...(o.headers||{})}});if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
-async function rpc(n,a){const r=await fetch(U+'/rest/v1/rpc/'+n,{method:'POST',headers:H,body:JSON.stringify(a)});if(!r.ok)throw Error(await r.text());return r.json()}
+const U='https://pmudwltxmyljiiiossch.supabase.co',K='sb_publishable_As2-YSQgc3BRsv1MzTdKDg_qUz3nqQ8',S='vesper-admin-session',H={apikey:K,'Content-Type':'application/json'};
+const API_TIMEOUT=12000,WRITE_CACHE='vesper-writings-cache',ABOUT_CACHE='vesper-about-cache';
+let writings=[],aboutText='';const app=document.getElementById('app'),drawer=document.getElementById('drawer');
+
+async function fetchWithTimeout(url,options={},timeout=API_TIMEOUT){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeout);
+  try{return await fetch(url,{...options,signal:controller.signal})}
+  finally{clearTimeout(timer)}
+}
+
+async function api(p,o={}){
+  const isRead=!o.method||o.method.toUpperCase()==='GET';
+  let lastError;
+  for(let attempt=0;attempt<(isRead?2:1);attempt++){
+    try{
+      const r=await fetchWithTimeout(U+'/rest/v1/'+p,{...o,headers:{...H,...(o.headers||{})}});
+      if(!r.ok)throw Error(await r.text());
+      return r.status===204?null:r.json();
+    }catch(e){lastError=e;if(attempt===0&&isRead)await new Promise(r=>setTimeout(r,350));}
+  }
+  throw lastError;
+}
+
+async function rpc(n,a){
+  const r=await fetchWithTimeout(U+'/rest/v1/rpc/'+n,{method:'POST',headers:H,body:JSON.stringify(a)},15000);
+  if(!r.ok)throw Error(await r.text());return r.json();
+}
+
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function page(x){app.innerHTML='<section class="page">'+x+'</section>';scrollTo(0,0)}
-async function load(){writings=await api('writings?select=*&order=created_at.desc')}
-async function loadAbout(){const a=await api('site_content?select=about_text&id=eq.1');aboutText=a[0]?.about_text||'';return aboutText}
+
+async function load(){
+  try{
+    writings=await api('writings?select=*&order=created_at.desc');
+    try{localStorage.setItem(WRITE_CACHE,JSON.stringify({at:Date.now(),data:writings}))}catch(e){}
+    return writings;
+  }catch(e){
+    try{const c=JSON.parse(localStorage.getItem(WRITE_CACHE)||'null');if(c?.data?.length){writings=c.data;return writings}}catch(x){}
+    throw e;
+  }
+}
+
+async function loadAbout(){
+  try{
+    const a=await api('site_content?select=about_text&id=eq.1');
+    aboutText=a[0]?.about_text||'';
+    try{localStorage.setItem(ABOUT_CACHE,JSON.stringify({at:Date.now(),data:aboutText}))}catch(e){}
+    return aboutText;
+  }catch(e){
+    try{const c=JSON.parse(localStorage.getItem(ABOUT_CACHE)||'null');if(c?.data!=null){aboutText=c.data;return aboutText}}catch(x){}
+    throw e;
+  }
+}
+
 function item(w){return '<a class="item" href="#/writing/'+encodeURIComponent(w.id)+'"><div class="line"></div><h2>'+esc(w.title)+'</h2><div class="date">'+esc(w.date)+'</div><p class="excerpt">'+esc((w.text||'').slice(0,190))+((w.text||'').length>190?'…':'')+'</p></a>'}
 function home(){page('<div class="hero"><div class="logo">VESPER</div><div class="tag">words that stayed</div><nav class="links"><a href="#/read">READ</a><a href="#/archive">ARCHIVE</a><a href="#/about">ABOUT</a></nav></div>')}
-async function read(){page('<div class="eyebrow">VESPER / WRITINGS</div><h1 class="title">READ</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div class="list">'+writings.map(item).join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load writings.'}}
-async function archive(){page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div>'+writings.map((w,i)=>'<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'"><span class="num">'+String(writings.length-i).padStart(3,'0')+'</span><span class="archive-name">'+esc(w.title)+'</span><span class="date">'+esc(w.date)+'</span></a>').join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load archive.'}}
-async function about(){page('<div class="eyebrow">THE WORLD OF VESPER</div><h1 class="title">ABOUT</h1><div id="aboutOut" class="about muted">Loading…</div>');try{const t=await loadAbout();document.getElementById('aboutOut').className='about';document.getElementById('aboutOut').textContent=t}catch(e){document.getElementById('aboutOut').textContent='Unable to load About.'}}
-async function article(id){await load();const w=writings.find(x=>x.id===decodeURIComponent(id));if(!w)return notFound();const b=(w.text||'').split(/\n\n+/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');page('<article class="article"><a class="back" href="#/">← VESPER</a><h1>'+esc(w.title)+'</h1><div class="date">'+esc(w.date)+'</div><div class="body">'+b+'</div><div class="under"><button class="share" id="share">SHARE</button><section class="comments"><div class="comments-title">COMMENTS</div><form class="comment-form" id="cf"><input id="name" maxlength="40" placeholder="Name"><textarea id="comment" maxlength="800" placeholder="Write a comment…" required></textarea><button>POST COMMENT</button></form><div id="comments" class="muted">Loading…</div></section></div></article>');document.getElementById('share').onclick=()=>navigator.share?navigator.share({title:w.title,url:location.href}):navigator.clipboard?.writeText(location.href);document.getElementById('cf').onsubmit=async e=>{e.preventDefault();const name=document.getElementById('name').value.trim()||'Anonymous',body=document.getElementById('comment').value.trim();try{await api('comments',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({writing_id:w.id,name,body})});e.target.reset();alert('نظر ثبت شد و پس از تأیید نمایش داده می‌شود.')}catch(x){alert('ارسال نظر انجام نشد.')}};comments(w.id);recordView(w.id)}
+
+async function read(){page('<div class="eyebrow">VESPER / WRITINGS</div><h1 class="title">READ</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div class="list">'+writings.map(item).join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load writings. Please try again.'}}
+async function archive(){page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div>'+writings.map((w,i)=>'<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'"><span class="num">'+String(writings.length-i).padStart(3,'0')+'</span><span class="archive-name">'+esc(w.title)+'</span><span class="date">'+esc(w.date)+'</span></a>').join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load archive. Please try again.'}}
+async function about(){page('<div class="eyebrow">THE WORLD OF VESPER</div><h1 class="title">ABOUT</h1><div id="aboutOut" class="about muted">Loading…</div>');try{const t=await loadAbout();document.getElementById('aboutOut').className='about';document.getElementById('aboutOut').textContent=t}catch(e){document.getElementById('aboutOut').textContent='Unable to load About. Please try again.'}}
+
+async function article(id){
+  page('<article class="article"><a class="back" href="#/">← VESPER</a><div id="articleOut" class="muted">Loading…</div></article>');
+  try{
+    await load();const w=writings.find(x=>x.id===decodeURIComponent(id));if(!w)return notFound();
+    const b=(w.text||'').split(/\n\n+/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
+    document.getElementById('articleOut').outerHTML='<article class="article"><a class="back" href="#/">← VESPER</a><h1>'+esc(w.title)+'</h1><div class="date">'+esc(w.date)+'</div><div class="body">'+b+'</div><div class="under"><button class="share" id="share">SHARE</button><section class="comments"><div class="comments-title">COMMENTS</div><form class="comment-form" id="cf"><input id="name" maxlength="40" placeholder="Name"><textarea id="comment" maxlength="800" placeholder="Write a comment…" required></textarea><button>POST COMMENT</button></form><div id="comments" class="muted">Loading…</div></section></div></article>';
+    document.getElementById('share').onclick=()=>navigator.share?navigator.share({title:w.title,url:location.href}):navigator.clipboard?.writeText(location.href);
+    document.getElementById('cf').onsubmit=async e=>{e.preventDefault();const name=document.getElementById('name').value.trim()||'Anonymous',body=document.getElementById('comment').value.trim();try{await api('comments',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({writing_id:w.id,name,body})});e.target.reset();alert('نظر ثبت شد و پس از تأیید نمایش داده می‌شود.')}catch(x){alert('ارسال نظر انجام نشد. لطفاً دوباره تلاش کنید.')}};
+    comments(w.id);recordView(w.id);
+  }catch(e){const out=document.getElementById('articleOut');if(out)out.textContent='Unable to load this writing. Please try again.'}
+}
+
 async function recordView(id){try{const key='vesper-view-'+id;if(sessionStorage.getItem(key))return;await rpc('record_writing_view',{p_id:id});sessionStorage.setItem(key,'1')}catch(e){}}
-async function comments(id){const e=document.getElementById('comments');try{const a=await api('comments?select=id,name,body,created_at&writing_id=eq.'+encodeURIComponent(id)+'&approved=eq.true&order=created_at.asc');e.innerHTML=a.length?a.map(c=>'<div class="comment"><div class="comment-name">'+esc(c.name)+'</div><div class="comment-text">'+esc(c.body)+'</div></div>').join(''):'<div class="empty">No comments yet.</div>'}catch(x){e.textContent='Unable to load comments.'}}
-function search(){page('<div class="eyebrow">FIND A WORD</div><h1 class="title">SEARCH</h1><input id="q" placeholder="Search writings…"><div id="res" class="list"></div>');const q=document.getElementById('q'),r=document.getElementById('res');q.oninput=()=>{const s=q.value.trim().toLowerCase();r.innerHTML=s?writings.filter(w=>(w.title+' '+w.text).toLowerCase().includes(s)).map(item).join(''):' '};q.focus()}
+async function comments(id){const e=document.getElementById('comments');if(!e)return;try{const a=await api('comments?select=id,name,body,created_at&writing_id=eq.'+encodeURIComponent(id)+'&approved=eq.true&order=created_at.asc');e.innerHTML=a.length?a.map(c=>'<div class="comment"><div class="comment-name">'+esc(c.name)+'</div><div class="comment-text">'+esc(c.body)+'</div></div>').join(''):'<div class="empty">No comments yet.</div>'}catch(x){e.textContent='Unable to load comments.'}}
+
+async function search(){page('<div class="eyebrow">FIND A WORD</div><h1 class="title">SEARCH</h1><input id="q" placeholder="Search writings…"><div id="res" class="list muted">Loading…</div>');try{await load()}catch(e){}const q=document.getElementById('q'),r=document.getElementById('res');q.oninput=()=>{const s=q.value.trim().toLowerCase();r.innerHTML=s?writings.filter(w=>(w.title+' '+w.text).toLowerCase().includes(s)).map(item).join(''):' '};r.innerHTML='';q.focus()}
+
 function adminLogin(){page('<div class="admin-login"><div class="eyebrow">PRIVATE AREA</div><h1 class="title">ADMIN</h1><form class="admin-form" id="login"><input id="pass" type="password" placeholder="Password"><button class="action">ENTER</button><div class="error" id="err"></div></form></div>');document.getElementById('login').onsubmit=async e=>{e.preventDefault();const p=document.getElementById('pass').value;try{await rpc('admin_list',{p_password:p});sessionStorage.setItem(S,p);location.hash='/admin/panel'}catch(x){document.getElementById('err').textContent='رمز عبور نادرست است.'}}}
 async function adminPanel(){const p=sessionStorage.getItem(S);if(!p)return adminLogin();let d,a;try{d=await rpc('admin_list',{p_password:p});a=await rpc('admin_analytics',{p_password:p})}catch(e){sessionStorage.removeItem(S);return adminLogin()}const ws=d.writings||[],cs=d.comments||[],by=a.by_writing||[];let h='<div class="eyebrow">VESPER MANAGEMENT</div><h1 class="title">ADMIN</h1>';h+='<div class="tools"><button class="action" id="newWriting">NEW WRITING</button><button class="action" id="logout">LOG OUT</button></div>';h+='<div class="dashboard"><div class="stat"><b>'+ws.length+'</b><span>WRITINGS</span></div><div class="stat"><b>'+cs.length+'</b><span>COMMENTS</span></div><div class="stat"><b>'+cs.filter(c=>!c.approved).length+'</b><span>PENDING</span></div><div class="stat"><b>'+Number(a.total_views||0)+'</b><span>VIEWS</span></div></div>';h+='<div class="analytics"><div class="comments-title">ANALYTICS</div><div class="dashboard"><div class="stat"><b>'+Number(a.views_7d||0)+'</b><span>VIEWS / 7 DAYS</span></div><div class="stat"><b>'+Number(a.views_30d||0)+'</b><span>VIEWS / 30 DAYS</span></div></div>';h+=by.map(x=>'<div class="bar-row"><div class="bar-head"><span>'+esc(x.title)+'</span><span class="bar-num">'+Number(x.views||0)+'</span></div></div>').join('')+'</div>';h+='<div class="comments-title">WRITINGS</div><div>';h+=ws.map(w=>'<div class="card"><h3>'+esc(w.title)+'</h3><p>'+esc(w.date)+'</p><div class="actions"><button class="action" data-edit="'+esc(w.id)+'">EDIT</button><button class="action danger" data-del="'+esc(w.id)+'">DELETE</button></div></div>').join('')+'</div>';h+='<div class="comment-admin"><div class="comments-title">COMMENTS</div>';h+=cs.length?cs.map(c=>'<div class="comment"><div class="comment-info"><div class="comment-name">'+esc(c.name)+'</div><div class="comment-text">'+esc(c.body)+'</div><div class="status">'+(c.approved?'APPROVED':'PENDING')+'</div></div><div class="actions"><button class="action" data-approve="'+c.id+'">'+(c.approved?'UNAPPROVE':'APPROVE')+'</button><button class="action danger" data-cdel="'+c.id+'">DELETE</button></div></div>').join(''):'<div class="empty">No comments.</div>';h+='</div>';h+='<div class="about-editor"><div class="comments-title">ABOUT</div><textarea id="aboutAdmin" placeholder="About text…">'+esc(await loadAbout())+'</textarea><div class="editor-tools"><button class="action" id="saveAbout">SAVE ABOUT</button><span class="ok" id="aboutOk"></span></div></div>';page(h);document.getElementById('newWriting').onclick=()=>editor();document.getElementById('logout').onclick=()=>{sessionStorage.removeItem(S);location.hash='/admin'};document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editor(ws.find(w=>w.id===b.dataset.edit)));document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>deleteWriting(b.dataset.del));document.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>approveComment(b.dataset.approve,!b.textContent.includes('UNAPPROVE')));document.querySelectorAll('[data-cdel]').forEach(b=>b.onclick=()=>deleteComment(b.dataset.cdel));document.getElementById('saveAbout').onclick=async()=>{const out=document.getElementById('aboutOk');try{await rpc('admin_save_about',{p_password:p,p_text:document.getElementById('aboutAdmin').value});out.textContent='Saved ✓';setTimeout(()=>out.textContent='',1800)}catch(e){out.textContent='Could not save.'}}}
-function editor(w){const p=sessionStorage.getItem(S);page('<div class="editor"><div class="eyebrow">WRITING EDITOR</div><h1 class="title">'+(w?'EDIT':'NEW')+'</h1><input id="etitle" placeholder="Title" value="'+esc(w?.title||'')+'"><input id="edate" placeholder="Date" value="'+esc(w?.date||'VESPER')+'" style="margin-top:9px"><textarea id="etext" placeholder="Your writing…" style="margin-top:9px">'+esc(w?.text||'')+'</textarea><div class="editor-tools"><button class="action" id="saveWriting">SAVE</button><a class="action" href="#/admin/panel">CANCEL</a></div><div class="error" id="saveErr"></div></div>');document.getElementById('saveWriting').onclick=async()=>{try{await rpc('admin_save_writing',{p_password:p,p_id:w?.id||'',p_title:document.getElementById('etitle').value,p_date:document.getElementById('edate').value,p_text:document.getElementById('etext').value});location.hash='/admin/panel'}catch(e){document.getElementById('saveErr').textContent='Save failed.'}}}
-async function deleteWriting(id){if(!confirm('Delete this writing?'))return;try{await rpc('admin_delete_writing',{p_password:sessionStorage.getItem(S),p_id:id});adminPanel()}catch(e){alert('Delete failed.')}}
+function editor(w){const p=sessionStorage.getItem(S);page('<div class="editor"><div class="eyebrow">WRITING EDITOR</div><h1 class="title">'+(w?'EDIT':'NEW')+'</h1><input id="etitle" placeholder="Title" value="'+esc(w?.title||'')+'"><input id="edate" placeholder="Date" value="'+esc(w?.date||'VESPER')+'" style="margin-top:9px"><textarea id="etext" placeholder="Your writing…" style="margin-top:9px">'+esc(w?.text||'')+'</textarea><div class="editor-tools"><button class="action" id="saveWriting">SAVE</button><a class="action" href="#/admin/panel">CANCEL</a></div><div class="error" id="saveErr"></div></div>');document.getElementById('saveWriting').onclick=async()=>{try{await rpc('admin_save_writing',{p_password:p,p_id:w?.id||'',p_title:document.getElementById('etitle').value,p_date:document.getElementById('edate').value,p_text:document.getElementById('etext').value});localStorage.removeItem(WRITE_CACHE);location.hash='/admin/panel'}catch(e){document.getElementById('saveErr').textContent='Save failed.'}}}
+async function deleteWriting(id){if(!confirm('Delete this writing?'))return;try{await rpc('admin_delete_writing',{p_password:sessionStorage.getItem(S),p_id:id});localStorage.removeItem(WRITE_CACHE);adminPanel()}catch(e){alert('Delete failed.')}}
 async function approveComment(id,approved){try{await rpc('admin_set_comment_approval',{p_password:sessionStorage.getItem(S),p_id:Number(id),p_approved:approved});adminPanel()}catch(e){alert('Update failed.')}}
 async function deleteComment(id){if(!confirm('Delete this comment?'))return;try{await rpc('admin_delete_comment',{p_password:sessionStorage.getItem(S),p_id:Number(id)});adminPanel()}catch(e){alert('Delete failed.')}}
 function notFound(){page('<div class="eyebrow">404</div><h1 class="title">NOT FOUND</h1>')}

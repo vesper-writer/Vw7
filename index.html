@@ -5,104 +5,1567 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#211712">
 <title>VESPER</title>
-<style>
-*{box-sizing:border-box}html{background:#211712}body{margin:0;background:#211712;color:#eadfd6;font-family:Tahoma,Arial,sans-serif;-webkit-user-select:none;user-select:none}a,button{color:inherit}a{text-decoration:none}button{border:0;background:none;cursor:pointer}input,textarea{width:100%;box-sizing:border-box;border:1px solid #4b362b;background:#2b1e18;color:#f1e9e2;padding:13px;font:300 14px Tahoma;-webkit-user-select:text;user-select:text}textarea{min-height:170px;resize:vertical}.top{position:fixed;z-index:10;top:0;left:0;right:0;height:72px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}.brand{font:300 17px Arial;letter-spacing:.35em}.menu{width:34px}.menu span,.menu span:before,.menu span:after{display:block;width:20px;height:1px;background:#b7a69b;content:""}.menu span:before{transform:translateY(-6px)}.menu span:after{transform:translateY(5px)}.drawer{position:fixed;z-index:30;inset:0;background:#211712;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s}.drawer.open{opacity:1;pointer-events:auto}.drawer nav{display:flex;flex-direction:column;align-items:center;gap:27px}.drawer a,.drawer button{font:300 12px Arial;letter-spacing:.22em}.close{position:absolute;top:16px;right:20px;font:300 30px Arial;color:#8f7d72}main{width:min(100%,760px);margin:auto}.page{padding:120px 26px 90px}.hero{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column}.logo{font:300 45px Arial;letter-spacing:.3em;margin-left:.3em}.tag{margin-top:19px;color:#a28e81;font-size:11px}.links{display:flex;gap:28px;margin-top:52px;direction:ltr}.links a{font:300 11px Arial;letter-spacing:.2em;color:#c0afa4}.eyebrow,.title,.comments-title,.share{font-family:Arial;direction:ltr}.eyebrow{font-size:10px;letter-spacing:.25em;color:#9b877b;margin-bottom:12px}.title{font-size:26px;font-weight:300;letter-spacing:.12em;margin:0 0 48px}.list{display:flex;flex-direction:column;gap:74px}.item{display:block}.line{width:28px;height:1px;background:#4b362b;margin-bottom:22px}.item h2{font-size:22px;line-height:1.8;font-weight:300;margin:0 0 4px}.date{font:300 10px Arial;color:#9a867a;direction:ltr;letter-spacing:.05em;margin:0 0 18px}.excerpt{color:#c9b8ad;font-size:14px;line-height:2.35;margin:0}.archive-row{display:flex;gap:17px;align-items:baseline;padding:19px 0;border-bottom:1px solid #403027}.num{font:300 10px Arial;color:#89766b;width:28px}.archive-name{flex:1;font-size:15px}.about{max-width:620px;color:#d8c8bd;line-height:2.7;font-size:15px;white-space:pre-line}.about:before{content:"";display:block;width:28px;height:1px;background:#4b362b;margin-bottom:30px}.back{display:inline-block;font:300 10px Arial;letter-spacing:.12em;color:#9a867a;margin-bottom:52px}.article h1{font-size:29px;font-weight:300;line-height:1.7;margin:0 0 5px}.article .date{margin-bottom:58px}.body{font-size:17px;line-height:2.65;color:#e0d2c8;-webkit-user-select:none;user-select:none}.body p{margin:0 0 2em}.under{border-top:1px solid #453229;margin-top:76px;padding-top:28px}.share{font-size:10px;letter-spacing:.18em;color:#9a867a}.comments{margin-top:55px}.comments-title{font-size:10px;letter-spacing:.22em;color:#9a867a;margin-bottom:22px}.comment-form,.admin-form{display:flex;flex-direction:column;gap:9px}.comment-form button,.action{border:1px solid #4b362b;padding:10px 16px;font:300 10px Arial;letter-spacing:.13em;align-self:flex-start}.comment{padding:18px 0;border-bottom:1px solid #403027}.comment-name{font-size:12px;margin-bottom:6px}.comment-text{font-size:13px;color:#c0afa5;line-height:2}.muted,.empty{color:#8b786d;font-size:12px}.admin-login{max-width:430px;margin:30px auto}.error{min-height:20px;color:#bd8977;font-size:12px}.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}.card{border:1px solid #4a352b;padding:20px;margin-bottom:12px}.card h3{font-weight:300;margin:0 0 8px;font-size:17px}.card p{font-size:11px;color:#96837a;margin:0 0 17px}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{color:#c08a77}.comment-admin{margin-top:45px;border-top:1px solid #4a352b;padding-top:28px}.comment-admin .comment{display:flex;gap:15px;justify-content:space-between}.comment-info{flex:1}.status{font-size:10px;color:#8f7d73;margin-top:7px}.dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 35px}.stat{border:1px solid #4a352b;padding:17px}.stat b{display:block;font:300 25px Arial;margin-bottom:7px}.stat span{font-size:10px;color:#96847a}.analytics{border-top:1px solid #4a352b;padding-top:28px;margin-bottom:45px}.bar-row{padding:12px 0;border-bottom:1px solid #403027}.bar-head{display:flex;justify-content:space-between;gap:15px;font-size:12px}.bar-num{font:300 11px Arial;color:#b19e93}.mini{font-size:10px;color:#817067;margin-top:5px}.editor{max-width:680px}.editor textarea{min-height:360px}.editor-tools{display:flex;gap:9px;margin-top:10px}.about-editor{margin-top:42px;border-top:1px solid #4a352b;padding-top:28px}.about-editor textarea{min-height:260px}.ok{color:#9fc09e;font-size:12px;min-height:20px}.section-gap{margin-top:44px}@media(max-width:600px){.logo{font-size:37px}.links{gap:18px}.body{font-size:16px}.page{padding-left:21px;padding-right:21px}.dashboard{grid-template-columns:repeat(2,1fr)}}
-</style>
-</head>
-<body>
-<header class="top"><a class="brand" href="#/">V</a><button class="menu" id="menu"><span></span></button></header>
-<div class="drawer" id="drawer"><button class="close" id="close">×</button><nav><a href="#/">VESPER</a><a href="#/read">READ</a><a href="#/archive">ARCHIVE</a><a href="#/about">ABOUT</a><button id="searchBtn">SEARCH</button><a href="#/admin">ADMIN</a></nav></div>
-<main id="app"></main>
-<script>
-const U='https://pmudwltxmyljiiiossch.supabase.co',K='sb_publishable_As2-YSQgc3BRsv1MzTdKDg_qUz3nqQ8',S='vesper-admin-session',H={apikey:K,'Content-Type':'application/json'};
-const API_TIMEOUT=12000,WRITE_CACHE='vesper-writings-cache',ABOUT_CACHE='vesper-about-cache';
-let writings=[],aboutText='';const app=document.getElementById('app'),drawer=document.getElementById('drawer');
 
-async function fetchWithTimeout(url,options={},timeout=API_TIMEOUT){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),timeout);
-  try{return await fetch(url,{...options,signal:controller.signal})}
-  finally{clearTimeout(timer)}
+<style>
+*{box-sizing:border-box}
+
+html{
+  background:#211712;
 }
 
-async function api(p,o={}){
-  const isRead=!o.method||o.method.toUpperCase()==='GET';
-  let lastError;
-  for(let attempt=0;attempt<(isRead?2:1);attempt++){
-    try{
-      const r=await fetchWithTimeout(U+'/rest/v1/'+p,{...o,headers:{...H,...(o.headers||{})}});
-      if(!r.ok)throw Error(await r.text());
-      return r.status===204?null:r.json();
-    }catch(e){lastError=e;if(attempt===0&&isRead)await new Promise(r=>setTimeout(r,350));}
+body{
+  margin:0;
+  background:#211712;
+  color:#eadfd6;
+  font-family:Tahoma,Arial,sans-serif;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+a,button{
+  color:inherit;
+}
+
+a{
+  text-decoration:none;
+}
+
+button{
+  border:0;
+  background:none;
+  cursor:pointer;
+}
+
+input,textarea{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid #4b362b;
+  background:#2b1e18;
+  color:#f1e9e2;
+  padding:13px;
+  font:300 14px Tahoma;
+  -webkit-user-select:text;
+  user-select:text;
+}
+
+textarea{
+  min-height:170px;
+  resize:vertical;
+}
+
+/* HEADER */
+
+.top{
+  position:fixed;
+  z-index:10;
+  top:0;
+  left:0;
+  right:0;
+  height:72px;
+  padding:0 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand{
+  font:300 17px Arial;
+  letter-spacing:.35em;
+}
+
+.menu{
+  width:34px;
+}
+
+.menu span,
+.menu span:before,
+.menu span:after{
+  display:block;
+  width:20px;
+  height:1px;
+  background:#b7a69b;
+  content:"";
+}
+
+.menu span:before{
+  transform:translateY(-6px);
+}
+
+.menu span:after{
+  transform:translateY(5px);
+}
+
+/* DRAWER */
+
+.drawer{
+  position:fixed;
+  z-index:30;
+  inset:0;
+  background:#211712;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.drawer.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.drawer nav{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:27px;
+}
+
+.drawer a,
+.drawer button{
+  font:300 12px Arial;
+  letter-spacing:.22em;
+}
+
+.close{
+  position:absolute;
+  top:16px;
+  right:20px;
+  font:300 30px Arial;
+  color:#8f7d72;
+}
+
+/* LAYOUT */
+
+main{
+  width:min(100%,760px);
+  margin:auto;
+}
+
+.page{
+  padding:120px 26px 90px;
+}
+
+/* HOME */
+
+.hero{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  flex-direction:column;
+}
+
+.logo{
+  font:300 45px Arial;
+  letter-spacing:.3em;
+  margin-left:.3em;
+}
+
+.tag{
+  margin-top:19px;
+  color:#a28e81;
+  font-size:11px;
+}
+
+.links{
+  display:flex;
+  gap:28px;
+  margin-top:52px;
+  direction:ltr;
+}
+
+.links a{
+  font:300 11px Arial;
+  letter-spacing:.2em;
+  color:#c0afa4;
+}
+
+/* TITLES */
+
+.eyebrow,
+.title,
+.comments-title,
+.share{
+  font-family:Arial;
+  direction:ltr;
+}
+
+.eyebrow{
+  font-size:10px;
+  letter-spacing:.25em;
+  color:#9b877b;
+  margin-bottom:12px;
+}
+
+.title{
+  font-size:26px;
+  font-weight:300;
+  letter-spacing:.12em;
+  margin:0 0 48px;
+}
+
+/* WRITINGS */
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:74px;
+}
+
+.item{
+  display:block;
+}
+
+.line{
+  width:28px;
+  height:1px;
+  background:#4b362b;
+  margin-bottom:22px;
+}
+
+.item h2{
+  font-size:22px;
+  line-height:1.8;
+  font-weight:300;
+  margin:0 0 4px;
+}
+
+.date{
+  font:300 10px Arial;
+  color:#9a867a;
+  direction:ltr;
+  letter-spacing:.05em;
+  margin:0 0 18px;
+}
+
+.excerpt{
+  color:#c9b8ad;
+  font-size:14px;
+  line-height:2.35;
+  margin:0;
+}
+
+/* ARCHIVE */
+
+.archive-row{
+  display:flex;
+  gap:17px;
+  align-items:baseline;
+  padding:19px 0;
+  border-bottom:1px solid #403027;
+}
+
+.num{
+  font:300 10px Arial;
+  color:#89766b;
+  width:28px;
+}
+
+.archive-name{
+  flex:1;
+  font-size:15px;
+}
+
+/* ABOUT */
+
+.about{
+  max-width:620px;
+  color:#d8c8bd;
+  line-height:2.7;
+  font-size:15px;
+  white-space:pre-line;
+}
+
+.about:before{
+  content:"";
+  display:block;
+  width:28px;
+  height:1px;
+  background:#4b362b;
+  margin-bottom:30px;
+}
+
+/* ARTICLE */
+
+.back{
+  display:inline-block;
+  font:300 10px Arial;
+  letter-spacing:.12em;
+  color:#9a867a;
+  margin-bottom:52px;
+}
+
+.article h1{
+  font-size:29px;
+  font-weight:300;
+  line-height:1.7;
+  margin:0 0 5px;
+}
+
+.article .date{
+  margin-bottom:58px;
+}
+
+.body{
+  font-size:17px;
+  line-height:2.65;
+  color:#e0d2c8;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+.body p{
+  margin:0 0 2em;
+}
+
+.under{
+  border-top:1px solid #453229;
+  margin-top:76px;
+  padding-top:28px;
+}
+
+.share{
+  font-size:10px;
+  letter-spacing:.18em;
+  color:#9a867a;
+}
+
+/* COMMENTS */
+
+.comments{
+  margin-top:55px;
+}
+
+.comments-title{
+  font-size:10px;
+  letter-spacing:.22em;
+  color:#9a867a;
+  margin-bottom:22px;
+}
+
+.comment-form,
+.admin-form{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.comment-form button,
+.action{
+  border:1px solid #4b362b;
+  padding:10px 16px;
+  font:300 10px Arial;
+  letter-spacing:.13em;
+  align-self:flex-start;
+}
+
+.comment{
+  padding:18px 0;
+  border-bottom:1px solid #403027;
+}
+
+.comment-name{
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.comment-text{
+  font-size:13px;
+  color:#c0afa5;
+  line-height:2;
+}
+
+.muted,
+.empty{
+  color:#8b786d;
+  font-size:12px;
+}
+
+/* ADMIN */
+
+.admin-login{
+  max-width:430px;
+  margin:30px auto;
+}
+
+.error{
+  min-height:20px;
+  color:#bd8977;
+  font-size:12px;
+}
+
+.tools{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:36px;
+}
+
+.card{
+  border:1px solid #4a352b;
+  padding:20px;
+  margin-bottom:12px;
+}
+
+.card h3{
+  font-weight:300;
+  margin:0 0 8px;
+  font-size:17px;
+}
+
+.card p{
+  font-size:11px;
+  color:#96837a;
+  margin:0 0 17px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.danger{
+  color:#c08a77;
+}
+
+.comment-admin{
+  margin-top:45px;
+  border-top:1px solid #4a352b;
+  padding-top:28px;
+}
+
+.comment-admin .comment{
+  display:flex;
+  gap:15px;
+  justify-content:space-between;
+}
+
+.comment-info{
+  flex:1;
+}
+
+.status{
+  font-size:10px;
+  color:#8f7d73;
+  margin-top:7px;
+}
+
+/* ANALYTICS */
+
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin:0 0 35px;
+}
+
+.stat{
+  border:1px solid #4a352b;
+  padding:17px;
+}
+
+.stat b{
+  display:block;
+  font:300 25px Arial;
+  margin-bottom:7px;
+}
+
+.stat span{
+  font-size:10px;
+  color:#96847a;
+}
+
+.analytics{
+  border-top:1px solid #4a352b;
+  padding-top:28px;
+  margin-bottom:45px;
+}
+
+.bar-row{
+  padding:12px 0;
+  border-bottom:1px solid #403027;
+}
+
+.bar-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  font-size:12px;
+}
+
+.bar-num{
+  font:300 11px Arial;
+  color:#b19e93;
+}
+
+/* EDITOR */
+
+.editor{
+  max-width:680px;
+}
+
+.editor textarea{
+  min-height:360px;
+}
+
+.editor-tools{
+  display:flex;
+  gap:9px;
+  margin-top:10px;
+}
+
+.about-editor{
+  margin-top:42px;
+  border-top:1px solid #4a352b;
+  padding-top:28px;
+}
+
+.about-editor textarea{
+  min-height:260px;
+}
+
+.ok{
+  color:#9fc09e;
+  font-size:12px;
+  min-height:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+  .logo{
+    font-size:37px;
   }
+
+  .links{
+    gap:18px;
+  }
+
+  .body{
+    font-size:16px;
+  }
+
+  .page{
+    padding-left:21px;
+    padding-right:21px;
+  }
+
+  .dashboard{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+  <a class="brand" href="#/">V</a>
+
+  <button class="menu" id="menu">
+    <span></span>
+  </button>
+</header>
+
+<div class="drawer" id="drawer">
+  <button class="close" id="close">×</button>
+
+  <nav>
+    <a href="#/">VESPER</a>
+    <a href="#/read">READ</a>
+    <a href="#/archive">ARCHIVE</a>
+    <a href="#/about">ABOUT</a>
+    <button id="searchBtn">SEARCH</button>
+    <a href="#/admin">ADMIN</a>
+  </nav>
+</div>
+
+<main id="app"></main>
+
+<script>
+const U='https://pmudwltxmyljiiiossch.supabase.co';
+
+const K='sb_publishable_As2-YSQgc3BRsv1MzTdKDg_qUz3nqQ8';
+
+const S='vesper-admin-session';
+
+const H={
+  apikey:K,
+  'Content-Type':'application/json'
+};
+
+const API_TIMEOUT=12000;
+
+const WRITE_CACHE='vesper-writings-cache';
+
+const ABOUT_CACHE='vesper-about-cache';
+
+let writings=[];
+
+let aboutText='';
+
+const app=document.getElementById('app');
+
+const drawer=document.getElementById('drawer');
+
+
+/* FETCH WITH TIMEOUT */
+
+async function fetchWithTimeout(url,options={},timeout=API_TIMEOUT){
+
+  const controller=new AbortController();
+
+  const timer=setTimeout(
+    ()=>controller.abort(),
+    timeout
+  );
+
+  try{
+
+    return await fetch(
+      url,
+      {
+        ...options,
+        signal:controller.signal
+      }
+    );
+
+  }finally{
+
+    clearTimeout(timer);
+
+  }
+}
+
+
+/* SUPABASE REST */
+
+async function api(p,o={}){
+
+  const isRead=
+    !o.method ||
+    o.method.toUpperCase()==='GET';
+
+  let lastError;
+
+  for(
+    let attempt=0;
+    attempt<(isRead?2:1);
+    attempt++
+  ){
+
+    try{
+
+      const r=await fetchWithTimeout(
+        U+'/rest/v1/'+p,
+        {
+          ...o,
+          headers:{
+            ...H,
+            ...(o.headers||{})
+          }
+        }
+      );
+
+      if(!r.ok){
+
+        throw Error(
+          await r.text()
+        );
+
+      }
+
+      return r.status===204
+        ? null
+        : r.json();
+
+    }catch(e){
+
+      lastError=e;
+
+      if(
+        attempt===0 &&
+        isRead
+      ){
+
+        await new Promise(
+          r=>setTimeout(r,350)
+        );
+
+      }
+
+    }
+
+  }
+
   throw lastError;
 }
 
+
+/* RPC */
+
 async function rpc(n,a){
-  const r=await fetchWithTimeout(U+'/rest/v1/rpc/'+n,{method:'POST',headers:H,body:JSON.stringify(a)},15000);
-  if(!r.ok)throw Error(await r.text());return r.json();
+
+  const r=await fetchWithTimeout(
+    U+'/rest/v1/rpc/'+n,
+    {
+      method:'POST',
+      headers:H,
+      body:JSON.stringify(a)
+    },
+    15000
+  );
+
+  if(!r.ok){
+
+    throw Error(
+      await r.text()
+    );
+
+  }
+
+  return r.json();
 }
 
-const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function page(x){app.innerHTML='<section class="page">'+x+'</section>';scrollTo(0,0)}
+
+/* ESCAPE HTML */
+
+const esc=x=>
+  String(x??'')
+    .replace(
+      /[&<>"']/g,
+      c=>({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      }[c])
+    );
+
+
+/* PAGE */
+
+function page(x){
+
+  app.innerHTML=
+    '<section class="page">'+
+    x+
+    '</section>';
+
+  window.scrollTo(0,0);
+}
+
+
+/* LOAD WRITINGS */
 
 async function load(){
+
   try{
-    writings=await api('writings?select=*&order=created_at.desc');
-    try{localStorage.setItem(WRITE_CACHE,JSON.stringify({at:Date.now(),data:writings}))}catch(e){}
+
+    writings=
+      await api(
+        'writings?select=*&order=created_at.desc'
+      );
+
+    try{
+
+      localStorage.setItem(
+        WRITE_CACHE,
+        JSON.stringify({
+          at:Date.now(),
+          data:writings
+        })
+      );
+
+    }catch(e){}
+
     return writings;
+
   }catch(e){
-    try{const c=JSON.parse(localStorage.getItem(WRITE_CACHE)||'null');if(c?.data?.length){writings=c.data;return writings}}catch(x){}
+
+    try{
+
+      const c=
+        JSON.parse(
+          localStorage.getItem(
+            WRITE_CACHE
+          )||'null'
+        );
+
+      if(
+        c?.data?.length
+      ){
+
+        writings=c.data;
+
+        return writings;
+
+      }
+
+    }catch(x){}
+
     throw e;
+
   }
+
 }
+
+
+/* LOAD ABOUT */
 
 async function loadAbout(){
+
   try{
-    const a=await api('site_content?select=about_text&id=eq.1');
-    aboutText=a[0]?.about_text||'';
-    try{localStorage.setItem(ABOUT_CACHE,JSON.stringify({at:Date.now(),data:aboutText}))}catch(e){}
+
+    const a=
+      await api(
+        'site_content?select=about_text&id=eq.1'
+      );
+
+    aboutText=
+      a[0]?.about_text || '';
+
+    try{
+
+      localStorage.setItem(
+        ABOUT_CACHE,
+        JSON.stringify({
+          at:Date.now(),
+          data:aboutText
+        })
+      );
+
+    }catch(e){}
+
     return aboutText;
+
   }catch(e){
-    try{const c=JSON.parse(localStorage.getItem(ABOUT_CACHE)||'null');if(c?.data!=null){aboutText=c.data;return aboutText}}catch(x){}
+
+    try{
+
+      const c=
+        JSON.parse(
+          localStorage.getItem(
+            ABOUT_CACHE
+          )||'null'
+        );
+
+      if(
+        c?.data!=null
+      ){
+
+        aboutText=c.data;
+
+        return aboutText;
+
+      }
+
+    }catch(x){}
+
     throw e;
+
   }
+
 }
 
-function item(w){return '<a class="item" href="#/writing/'+encodeURIComponent(w.id)+'"><div class="line"></div><h2>'+esc(w.title)+'</h2><div class="date">'+esc(w.date)+'</div><p class="excerpt">'+esc((w.text||'').slice(0,190))+((w.text||'').length>190?'…':'')+'</p></a>'}
-function home(){page('<div class="hero"><div class="logo">VESPER</div><div class="tag">words that stayed</div><nav class="links"><a href="#/read">READ</a><a href="#/archive">ARCHIVE</a><a href="#/about">ABOUT</a></nav></div>')}
 
-async function read(){page('<div class="eyebrow">VESPER / WRITINGS</div><h1 class="title">READ</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div class="list">'+writings.map(item).join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load writings. Please try again.'}}
-async function archive(){page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div>'+writings.map((w,i)=>'<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'"><span class="num">'+String(writings.length-i).padStart(3,'0')+'</span><span class="archive-name">'+esc(w.title)+'</span><span class="date">'+esc(w.date)+'</span></a>').join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load archive. Please try again.'}}
-async function about(){page('<div class="eyebrow">THE WORLD OF VESPER</div><h1 class="title">ABOUT</h1><div id="aboutOut" class="about muted">Loading…</div>');try{const t=await loadAbout();document.getElementById('aboutOut').className='about';document.getElementById('aboutOut').textContent=t}catch(e){document.getElementById('aboutOut').textContent='Unable to load About. Please try again.'}}
+/* WRITING CARD */
+
+function item(w){
+
+  return `
+    <a
+      class="item"
+      href="#/writing/${encodeURIComponent(w.id)}"
+    >
+
+      <div class="line"></div>
+
+      <h2>${esc(w.title)}</h2>
+
+      <div class="date">
+        ${esc(w.date)}
+      </div>
+
+      <p class="excerpt">
+        ${esc(
+          (w.text||'').slice(0,190)
+        )}
+        ${(w.text||'').length>190?'…':''}
+      </p>
+
+    </a>
+  `;
+
+}
+
+
+/* HOME */
+
+function home(){
+
+  page(`
+
+    <div class="hero">
+
+      <div class="logo">
+        VESPER
+      </div>
+
+      <div class="tag">
+        words that stayed
+      </div>
+
+      <nav class="links">
+        <a href="#/read">
+          READ
+        </a>
+
+        <a href="#/archive">
+          ARCHIVE
+        </a>
+
+        <a href="#/about">
+          ABOUT
+        </a>
+      </nav>
+
+    </div>
+
+  `);
+
+}
+
+
+/* READ */
+
+async function read(){
+
+  page(`
+
+    <div class="eyebrow">
+      VESPER / WRITINGS
+    </div>
+
+    <h1 class="title">
+      READ
+    </h1>
+
+    <div id="out" class="muted">
+      Loading…
+    </div>
+
+  `);
+
+  try{
+
+    await load();
+
+    document.getElementById(
+      'out'
+    ).outerHTML=
+
+      '<div class="list">'+
+      writings.map(item).join('')+
+      '</div>';
+
+  }catch(e){
+
+    document.getElementById(
+      'out'
+    ).textContent=
+      'Unable to load writings. Please try again.';
+
+  }
+
+}
+
+
+/* ARCHIVE */
+
+async function archive(){
+
+  page(`
+
+    <div class="eyebrow">
+      ALL WRITINGS
+    </div>
+
+    <h1 class="title">
+      ARCHIVE
+    </h1>
+
+    <div id="out" class="muted">
+      Loading…
+    </div>
+
+  `);
+
+  try{
+
+    await load();
+
+    document.getElementById(
+      'out'
+    ).outerHTML=
+
+      '<div>'+
+      writings.map(
+        (w,i)=>`
+
+          <a
+            class="archive-row"
+            href="#/writing/${encodeURIComponent(w.id)}"
+          >
+
+            <span class="num">
+              ${String(
+                writings.length-i
+              ).padStart(3,'0')}
+            </span>
+
+            <span class="archive-name">
+              ${esc(w.title)}
+            </span>
+
+            <span class="date">
+              ${esc(w.date)}
+            </span>
+
+          </a>
+
+        `
+      ).join('')+
+      '</div>';
+
+  }catch(e){
+
+    document.getElementById(
+      'out'
+    ).textContent=
+      'Unable to load archive. Please try again.';
+
+  }
+
+}
+
+
+/* ABOUT */
+
+async function about(){
+
+  page(`
+
+    <div class="eyebrow">
+      THE WORLD OF VESPER
+    </div>
+
+    <h1 class="title">
+      ABOUT
+    </h1>
+
+    <div
+      id="aboutOut"
+      class="about muted"
+    >
+      Loading…
+    </div>
+
+  `);
+
+  try{
+
+    const t=await loadAbout();
+
+    const out=
+      document.getElementById(
+        'aboutOut'
+      );
+
+    out.className='about';
+
+    out.textContent=t;
+
+  }catch(e){
+
+    document.getElementById(
+      'aboutOut'
+    ).textContent=
+      'Unable to load About. Please try again.';
+
+  }
+
+}
+
+
+/* ARTICLE */
 
 async function article(id){
-  page('<article class="article"><a class="back" href="#/">← VESPER</a><div id="articleOut" class="muted">Loading…</div></article>');
+
+  page(`
+
+    <article class="article">
+
+      <a
+        class="back"
+        href="#/"
+      >
+        ← VESPER
+      </a>
+
+      <div
+        id="articleOut"
+        class="muted"
+      >
+        Loading…
+      </div>
+
+    </article>
+
+  `);
+
   try{
-    await load();const w=writings.find(x=>x.id===decodeURIComponent(id));if(!w)return notFound();
-    const b=(w.text||'').split(/\n\n+/).map(p=>'<p>'+esc(p).replace(/\n/g,'<br>')+'</p>').join('');
-    document.getElementById('articleOut').outerHTML='<article class="article"><a class="back" href="#/">← VESPER</a><h1>'+esc(w.title)+'</h1><div class="date">'+esc(w.date)+'</div><div class="body">'+b+'</div><div class="under"><button class="share" id="share">SHARE</button><section class="comments"><div class="comments-title">COMMENTS</div><form class="comment-form" id="cf"><input id="name" maxlength="40" placeholder="Name"><textarea id="comment" maxlength="800" placeholder="Write a comment…" required></textarea><button>POST COMMENT</button></form><div id="comments" class="muted">Loading…</div></section></div></article>';
-    document.getElementById('share').onclick=()=>navigator.share?navigator.share({title:w.title,url:location.href}):navigator.clipboard?.writeText(location.href);
-    document.getElementById('cf').onsubmit=async e=>{e.preventDefault();const name=document.getElementById('name').value.trim()||'Anonymous',body=document.getElementById('comment').value.trim();try{await api('comments',{method:'POST',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({writing_id:w.id,name,body})});e.target.reset();alert('نظر ثبت شد و پس از تأیید نمایش داده می‌شود.')}catch(x){alert('ارسال نظر انجام نشد. لطفاً دوباره تلاش کنید.')}};
-    comments(w.id);recordView(w.id);
-  }catch(e){const out=document.getElementById('articleOut');if(out)out.textContent='Unable to load this writing. Please try again.'}
+
+    await load();
+
+    const target=
+      decodeURIComponent(id);
+
+    const w=
+      writings.find(
+        x=>String(x.id)===String(target)
+      );
+
+    if(!w){
+
+      return notFound();
+
+    }
+
+    const b=
+      (w.text||'')
+        .split(/\n\n+/)
+        .map(
+          p=>
+            '<p>'+
+            esc(p).replace(
+              /\n/g,
+              '<br>'
+            )+
+            '</p>'
+        )
+        .join('');
+
+    document.getElementById(
+      'articleOut'
+    ).outerHTML=`
+
+      <article class="article">
+
+        <a
+          class="back"
+          href="#/"
+        >
+          ← VESPER
+        </a>
+
+        <h1>
+          ${esc(w.title)}
+        </h1>
+
+        <div class="date">
+          ${esc(w.date)}
+        </div>
+
+        <div class="body">
+          ${b}
+        </div>
+
+        <div class="under">
+
+          <button
+            class="share"
+            id="share"
+          >
+            SHARE
+          </button>
+
+          <section class="comments">
+
+            <div class="comments-title">
+              COMMENTS
+            </div>
+
+            <form
+              class="comment-form"
+              id="cf"
+            >
+
+              <input
+                id="name"
+                maxlength="40"
+                placeholder="Name"
+              >
+
+              <textarea
+                id="comment"
+                maxlength="800"
+                placeholder="Write a comment…"
+                required
+              ></textarea>
+
+              <button>
+                POST COMMENT
+              </button>
+
+            </form>
+
+            <div
+              id="comments"
+              class="muted"
+            >
+              Loading…
+            </div>
+
+          </section>
+
+        </div>
+
+      </article>
+
+    `;
+
+
+    /* SHARE */
+
+    document.getElementById(
+      'share'
+    ).onclick=()=>{
+
+      if(
+        navigator.share
+      ){
+
+        navigator.share({
+          title:w.title,
+          url:location.href
+        });
+
+      }else if(
+        navigator.clipboard
+      ){
+
+        navigator.clipboard
+          .writeText(location.href);
+
+      }
+
+    };
+
+
+    /* COMMENT */
+
+    document.getElementById(
+      'cf'
+    ).onsubmit=async e=>{
+
+      e.preventDefault();
+
+      const name=
+        document.getElementById(
+          'name'
+        ).value.trim()
+        ||'Anonymous';
+
+      const body=
+        document.getElementById(
+          'comment'
+        ).value.trim();
+
+      try{
+
+        await api(
+          'comments',
+          {
+            method:'POST',
+            headers:{
+              ...H,
+              Prefer:'return=minimal'
+            },
+            body:JSON.stringify({
+              writing_id:w.id,
+              name,
+              body
+            })
+          }
+        );
+
+        e.target.reset();
+
+        alert(
+          'نظر ثبت شد و پس از تأیید نمایش داده می‌شود.'
+        );
+
+      }catch(x){
+
+        alert(
+          'ارسال نظر انجام نشد. لطفاً دوباره تلاش کنید.'
+        );
+
+      }
+
+    };
+
+
+    comments(w.id);
+
+    recordView(w.id);
+
+  }catch(e){
+
+    const out=
+      document.getElementById(
+        'articleOut'
+      );
+
+    if(out){
+
+      out.textContent=
+        'Unable to load this writing. Please try again.';
+
+    }
+
+  }
+
 }
 
-async function recordView(id){try{const key='vesper-view-'+id;if(sessionStorage.getItem(key))return;await rpc('record_writing_view',{p_id:id});sessionStorage.setItem(key,'1')}catch(e){}}
-async function comments(id){const e=document.getElementById('comments');if(!e)return;try{const a=await api('comments?select=id,name,body,created_at&writing_id=eq.'+encodeURIComponent(id)+'&approved=eq.true&order=created_at.asc');e.innerHTML=a.length?a.map(c=>'<div class="comment"><div class="comment-name">'+esc(c.name)+'</div><div class="comment-text">'+esc(c.body)+'</div></div>').join(''):'<div class="empty">No comments yet.</div>'}catch(x){e.textContent='Unable to load comments.'}}
 
-async function search(){page('<div class="eyebrow">FIND A WORD</div><h1 class="title">SEARCH</h1><input id="q" placeholder="Search writings…"><div id="res" class="list muted">Loading…</div>');try{await load()}catch(e){}const q=document.getElementById('q'),r=document.getElementById('res');q.oninput=()=>{const s=q.value.trim().toLowerCase();r.innerHTML=s?writings.filter(w=>(w.title+' '+w.text).toLowerCase().includes(s)).map(item).join(''):' '};r.innerHTML='';q.focus()}
+/* VIEW COUNTER */
 
-function adminLogin(){page('<div class="admin-login"><div class="eyebrow">PRIVATE AREA</div><h1 class="title">ADMIN</h1><form class="admin-form" id="login"><input id="pass" type="password" placeholder="Password"><button class="action">ENTER</button><div class="error" id="err"></div></form></div>');document.getElementById('login').onsubmit=async e=>{e.preventDefault();const p=document.getElementById('pass').value;try{await rpc('admin_list',{p_password:p});sessionStorage.setItem(S,p);location.hash='/admin/panel'}catch(x){document.getElementById('err').textContent='رمز عبور نادرست است.'}}}
-async function adminPanel(){const p=sessionStorage.getItem(S);if(!p)return adminLogin();let d,a;try{d=await rpc('admin_list',{p_password:p});a=await rpc('admin_analytics',{p_password:p})}catch(e){sessionStorage.removeItem(S);return adminLogin()}const ws=d.writings||[],cs=d.comments||[],by=a.by_writing||[];let h='<div class="eyebrow">VESPER MANAGEMENT</div><h1 class="title">ADMIN</h1>';h+='<div class="tools"><button class="action" id="newWriting">NEW WRITING</button><button class="action" id="logout">LOG OUT</button></div>';h+='<div class="dashboard"><div class="stat"><b>'+ws.length+'</b><span>WRITINGS</span></div><div class="stat"><b>'+cs.length+'</b><span>COMMENTS</span></div><div class="stat"><b>'+cs.filter(c=>!c.approved).length+'</b><span>PENDING</span></div><div class="stat"><b>'+Number(a.total_views||0)+'</b><span>VIEWS</span></div></div>';h+='<div class="analytics"><div class="comments-title">ANALYTICS</div><div class="dashboard"><div class="stat"><b>'+Number(a.views_7d||0)+'</b><span>VIEWS / 7 DAYS</span></div><div class="stat"><b>'+Number(a.views_30d||0)+'</b><span>VIEWS / 30 DAYS</span></div></div>';h+=by.map(x=>'<div class="bar-row"><div class="bar-head"><span>'+esc(x.title)+'</span><span class="bar-num">'+Number(x.views||0)+'</span></div></div>').join('')+'</div>';h+='<div class="comments-title">WRITINGS</div><div>';h+=ws.map(w=>'<div class="card"><h3>'+esc(w.title)+'</h3><p>'+esc(w.date)+'</p><div class="actions"><button class="action" data-edit="'+esc(w.id)+'">EDIT</button><button class="action danger" data-del="'+esc(w.id)+'">DELETE</button></div></div>').join('')+'</div>';h+='<div class="comment-admin"><div class="comments-title">COMMENTS</div>';h+=cs.length?cs.map(c=>'<div class="comment"><div class="comment-info"><div class="comment-name">'+esc(c.name)+'</div><div class="comment-text">'+esc(c.body)+'</div><div class="status">'+(c.approved?'APPROVED':'PENDING')+'</div></div><div class="actions"><button class="action" data-approve="'+c.id+'">'+(c.approved?'UNAPPROVE':'APPROVE')+'</button><button class="action danger" data-cdel="'+c.id+'">DELETE</button></div></div>').join(''):'<div class="empty">No comments.</div>';h+='</div>';h+='<div class="about-editor"><div class="comments-title">ABOUT</div><textarea id="aboutAdmin" placeholder="About text…">'+esc(await loadAbout())+'</textarea><div class="editor-tools"><button class="action" id="saveAbout">SAVE ABOUT</button><span class="ok" id="aboutOk"></span></div></div>';page(h);document.getElementById('newWriting').onclick=()=>editor();document.getElementById('logout').onclick=()=>{sessionStorage.removeItem(S);location.hash='/admin'};document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editor(ws.find(w=>w.id===b.dataset.edit)));document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>deleteWriting(b.dataset.del));document.querySelectorAll('[data-approve]').forEach(b=>b.onclick=()=>approveComment(b.dataset.approve,!b.textContent.includes('UNAPPROVE')));document.querySelectorAll('[data-cdel]').forEach(b=>b.onclick=()=>deleteComment(b.dataset.cdel));document.getElementById('saveAbout').onclick=async()=>{const out=document.getElementById('aboutOk');try{await rpc('admin_save_about',{p_password:p,p_text:document.getElementById('aboutAdmin').value});out.textContent='Saved ✓';setTimeout(()=>out.textContent='',1800)}catch(e){out.textContent='Could not save.'}}}
-function editor(w){const p=sessionStorage.getItem(S);page('<div class="editor"><div class="eyebrow">WRITING EDITOR</div><h1 class="title">'+(w?'EDIT':'NEW')+'</h1><input id="etitle" placeholder="Title" value="'+esc(w?.title||'')+'"><input id="edate" placeholder="Date" value="'+esc(w?.date||'VESPER')+'" style="margin-top:9px"><textarea id="etext" placeholder="Your writing…" style="margin-top:9px">'+esc(w?.text||'')+'</textarea><div class="editor-tools"><button class="action" id="saveWriting">SAVE</button><a class="action" href="#/admin/panel">CANCEL</a></div><div class="error" id="saveErr"></div></div>');document.getElementById('saveWriting').onclick=async()=>{try{await rpc('admin_save_writing',{p_password:p,p_id:w?.id||'',p_title:document.getElementById('etitle').value,p_date:document.getElementById('edate').value,p_text:document.getElementById('etext').value});localStorage.removeItem(WRITE_CACHE);location.hash='/admin/panel'}catch(e){document.getElementById('saveErr').textContent='Save failed.'}}}
-async function deleteWriting(id){if(!confirm('Delete this writing?'))return;try{await rpc('admin_delete_writing',{p_password:sessionStorage.getItem(S),p_id:id});localStorage.removeItem(WRITE_CACHE);adminPanel()}catch(e){alert('Delete failed.')}}
-async function approveComment(id,approved){try{await rpc('admin_set_comment_approval',{p_password:sessionStorage.getItem(S),p_id:Number(id),p_approved:approved});adminPanel()}catch(e){alert('Update failed.')}}
-async function deleteComment(id){if(!confirm('Delete this comment?'))return;try{await rpc('admin_delete_comment',{p_password:sessionStorage.getItem(S),p_id:Number(id)});adminPanel()}catch(e){alert('Delete failed.')}}
-function notFound(){page('<div class="eyebrow">404</div><h1 class="title">NOT FOUND</h1>')}
-function route(){const p=location.hash.slice(1)||'/';if(p==='/')return home();if(p==='/read')return read();if(p==='/archive')return archive();if(p==='/about')return about();if(p==='/admin')return adminLogin();if(p==='/admin/panel')return adminPanel();if(p==='/search')return search();if(p.startsWith('/writing/'))return article(p.slice(9));notFound()}
-document.getElementById('menu').onclick=()=>drawer.classList.add('open');document.getElementById('close').onclick=()=>drawer.classList.remove('open');drawer.querySelectorAll('a').forEach(a=>a.onclick=()=>drawer.classList.remove('open'));document.getElementById('searchBtn').onclick=()=>{drawer.classList.remove('open');location.hash='/search'};addEventListener('hashchange',route);route();
-document.addEventListener('copy',e=>{if(e.target.closest('.body'))e.preventDefault()});document.addEventListener('cut',e=>{if(e.target.closest('.body'))e.preventDefault()});document.addEventListener('contextmenu',e=>{if(e.target.closest('.body'))e.preventDefault()});document.addEventListener('dragstart',e=>{if(e.target.closest('.body'))e.preventDefault()});
-</script>
-</body>
-</html>
+async function recordView(id){
+
+  try{
+
+    const key=
+      'vesper-view-'+id;
+
+    if(
+      sessionStorage.getItem(key)
+    ){
+
+      return;
+
+    }
+
+    await rpc(
+      'record_writing_view',
+      {
+        p_id:id
+      }
+    );
+
+    sessionStorage.setItem(
+      key,
+      '1'
+    );
+
+  }catch(e){}
+
+}
+
+
+/* COMMENTS */
+
+async function comments(id){
+
+  const e=
+    document.getElementById(
+      'comments'
+    );
+
+  if(!e)return;
+
+  try{
+
+    const a=
+      await api(
+        'comments?select=id,name,body,created_at&writing_id=eq.'+
+        encodeURIComponent(id)+
+        '&approved=eq.true&order=created_at.asc'
+      );
+
+    e.innerHTML=
+      a.length
+
+      ?
+
+      a.map(
+        c=>`
+
+          <div class="comment">
+
+            <div class="comment-name">
+              ${esc(c.name)}
+            </div>
+
+            <div class="comment-text">
+              ${esc(c.body)}
+            </div>
+
+          </div>
+
+        `
+      ).join('')
+
+      :
+
+      '<div class="empty">No comments yet.</div>';
+
+  }catch(x){
+
+    e.textContent=
+      'Unable to load comments.';
+
+  }
+
+}
+
+
+/* SEARCH */
+
+async function search(){
+
+  page(`
+
+    <div class="eyebrow">
+      FIND A WORD
+    </div>
+
+    <h1 class="title">
+      SEARCH
+    </h1>
+
+    <input
+      id="q"
+      placeholder="Search writings…"
+    >
+
+    <div
+      id="res"
+      class="list muted"
+    >
+      Loading…
+    </div>
+
+  `);
+
+  try{
+
+    await load();
+
+  }catch(e){}
+
+  const q=
+    document.getElementById('q');
+
+  const r=
+    document.getElementById('res');
+
+  q.oninput=()=>{
+
+    const s=
+      q.value.trim().toLowerCase();
+
+    r.innerHTML=
+
+      s
+
+      ?
+
+      writings
+        .filter(
+          w=>
+            (w.title+' '+w.text)
+              .toLowerCase()
+              .includes(s)
+        )
+        .map(item)
+        .join('')
+
+      :
+
+      ' ';
+
+  };
+
+  r.innerHTML='';
+
+  q.focus();
+
+}
+
+
+/* ADMIN LOGIN */
+
+function adminLogin(){
+
+  page(`
+
+    <div class="admin-login">
+
+      <div class="eyebrow">
+        PRIVATE AREA
+      </div>
+
+      <h1 class="title">
+        ADMIN
+      </h1>
+
+      <form
+        class="admin-form"
+        id="login"
+      >
+
+        <input
+          id="pass"
+          type="password"
+          placeholder="Password"
+        >
+
+        <button class="action">
+          ENTER
+        </button>
+
+        <div
+          class="error"
+          id="err"
+        ></div>
+
+      </form>
+
+    </div>
+
+  `);
+
+  document.getElementById(
+    'login'
+  ).onsubmit=async e=>{
+
+    e.preventDefault();
+
+    const p=
+      document.getElementById(
+        'pass'
+      ).value;
+
+    try{
+
+      await rpc(
+        'admin_list',
+        {
+          p_password:p

@@ -72,53 +72,10 @@ async function loadAbout(){
 function item(w){return '<a class="item" href="#/writing/'+encodeURIComponent(w.id)+'"><div class="line"></div><h2>'+esc(w.title)+'</h2><div class="date">'+esc(w.date)+'</div><p class="excerpt">'+esc((w.text||'').slice(0,190))+((w.text||'').length>190?'…':'')+'</p></a>'}
 function home(){page('<div class="hero"><div class="logo">VESPER</div><div class="tag">words that stayed</div><nav class="links"><a href="#/read">READ</a><a href="#/archive">ARCHIVE</a><a href="#/about">ABOUT</a></nav></div>')}
 
-async function read(){
-  page('<div class="eyebrow">VESPER / WRITINGS</div><h1 class="title">READ</h1><div id="out" class="muted">Loading…</div>');
+async function read(){page('<div class="eyebrow">VESPER / WRITINGS</div><h1 class="title">READ</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div class="list">'+writings.map(item).join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load writings. Please try again.'}}
+async function archive(){page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');try{await load();document.getElementById('out').outerHTML='<div>'+writings.map((w,i)=>'<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'"><span class="num">'+String(writings.length-i).padStart(3,'0')+'</span><span class="archive-name">'+esc(w.title)+'</span><span class="date">'+esc(w.date)+'</span></a>').join('')+'</div>'}catch(e){document.getElementById('out').textContent='Unable to load archive. Please try again.'}}
+async function about(){page('<div class="eyebrow">THE WORLD OF VESPER</div><h1 class="title">ABOUT</h1><div id="aboutOut" class="about muted">Loading…</div>');try{const t=await loadAbout();document.getElementById('aboutOut').className='about';document.getElementById('aboutOut').textContent=t}catch(e){document.getElementById('aboutOut').textContent='Unable to load About. Please try again.'}}
 
-  const out=document.getElementById('out');
-
-  try{
-    const c=JSON.parse(localStorage.getItem(WRITE_CACHE)||'null');
-    if(c?.data?.length){
-      writings=c.data;
-      out.outerHTML='<div class="list">'+writings.map(item).join('')+'</div>';
-    }
-  }catch(e){}
-
-  try{
-    await load();
-
-    const current=document.querySelector('.list');
-    const html='<div class="list">'+writings.map(item).join('')+'</div>';
-
-    if(current) current.outerHTML=html;
-    else if(out) out.outerHTML=html;
-
-  }catch(e){
-    if(!document.querySelector('.list')){
-      out.textContent='Unable to load writings. Please try again.';
-    }
-  }
-}
-  async function archive(){
-  page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');
-  const out=document.getElementById('out');
-
-  try{
-    await load();
-
-    out.outerHTML='<div>'+writings.map((w,i)=>
-      '<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'">'+
-      '<span class="num">'+String(writings.length-i).padStart(3,'0')+'</span>'+
-      '<span class="archive-name">'+esc(w.title)+'</span>'+
-      '<span class="date">'+esc(w.date)+'</span>'+
-      '</a>'
-    ).join('')+'</div>';
-
-  }catch(e){
-    out.textContent='Unable to load archive. Please try again.';
-  }
-  }
 async function article(id){
   page('<article class="article"><a class="back" href="#/">← VESPER</a><div id="articleOut" class="muted">Loading…</div></article>');
   try{

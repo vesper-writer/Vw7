@@ -100,6 +100,25 @@ async function read(){
     }
   }
 }
+  async function archive(){
+  page('<div class="eyebrow">ALL WRITINGS</div><h1 class="title">ARCHIVE</h1><div id="out" class="muted">Loading…</div>');
+  const out=document.getElementById('out');
+
+  try{
+    await load();
+
+    out.outerHTML='<div>'+writings.map((w,i)=>
+      '<a class="archive-row" href="#/writing/'+encodeURIComponent(w.id)+'">'+
+      '<span class="num">'+String(writings.length-i).padStart(3,'0')+'</span>'+
+      '<span class="archive-name">'+esc(w.title)+'</span>'+
+      '<span class="date">'+esc(w.date)+'</span>'+
+      '</a>'
+    ).join('')+'</div>';
+
+  }catch(e){
+    out.textContent='Unable to load archive. Please try again.';
+  }
+  }
 async function article(id){
   page('<article class="article"><a class="back" href="#/">← VESPER</a><div id="articleOut" class="muted">Loading…</div></article>');
   try{
